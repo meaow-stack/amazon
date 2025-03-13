@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1 class="mb-4">Payment Successful</h1>
+    <p>Thank you for your purchase, {{ user.username }}!</p>
+    <h3>Shipping Details</h3>
+    <p><strong>Address:</strong> {{ shipping_details.address }}</p>
+    <p><strong>Pincode:</strong> {{ shipping_details.pincode }}</p>
+    <p><strong>District:</strong> {{ shipping_details.district }}</p>
+    <p><strong>State:</strong> {{ shipping_details.state }}</p>
+    <p><strong>Country:</strong> {{ shipping_details.country }}</p>
+    <a href="{% url 'user_dashboard' %}" class="btn btn-primary mt-3">Continue Shopping</a>
+{% endblock %}

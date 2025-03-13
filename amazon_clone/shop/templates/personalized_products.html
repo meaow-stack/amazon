@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="jumbotron p-5 mb-5 rounded-3 text-center"
+        style="background: linear-gradient(135deg, #1d64ce, #000000);">
+        <h1 class="display-4 fw-bold">Products for You, {{ username }}!</h1>
+        <p class="lead text-muted">Explore items tailored to your tastes.</p>
+        <div class="mt-4">
+            <a href="{% url 'home' %}" class="btn btn-secondary btn-lg px-4 py-2">Back to Home</a>
+        </div>
+    </div>
+
+    <!-- Personalized Products Section -->
+    <h2 class="mb-4 fw-bold text-center">Tailored to Your Taste</h2>
+    <div class="row g-4">
+        {% for product in recommended_products %}
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm product-card border-0"
+                style="transition: transform 0.3s, box-shadow 0.3s;">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}"
+                    style="height: 250px; object-fit: cover;">
+                {% else %}
+                <img src="https://via.placeholder.com/250x250?text={{ product.name }}" class="card-img-top"
+                    alt="{{ product.name }}" style="height: 250px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title fw-semibold">{{ product.name }}</h5>
+                    <p class="card-text text-muted small">{{ product.description|truncatewords:15 }}</p>
+                    <p class="card-text text-success fw-bold">${{ product.price }}</p>
+                </div>
+                <div class="card-footer bg-transparent border-0 pb-3">
+                    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary w-100">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p class="text-muted">No personalized recommendations yet—keep shopping to refine your tastes!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    [data-bs-theme="dark"] .jumbotron {
+        background: linear-gradient(135deg, #2c3e50, #4a5568);
+        color: #fff;
+    }
+
+    [data-bs-theme="dark"] .lead {
+        color: #d1d5db;
+    }
+</style>
+{% endblock %}

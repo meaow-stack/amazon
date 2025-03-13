@@ -1,0 +1,283 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <!-- Promotional Carousel -->
+    <div id="promoCarousel" class="carousel slide mb-5" data-bs-ride="carousel" data-bs-interval="5000">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="0" class="active"
+                aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="position-relative">
+                    <img src="{% static 'images/sale_banner.jpg' %}" class="d-block w-100" alt="Big Sale"
+                        style="object-fit: cover; height: 450px; filter: brightness(80%);">
+                    <div class="carousel-caption d-flex flex-column justify-content-center h-100 text-start">
+                        <h5 class="display-4 fw-bold text-white" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Big
+                            Sale!</h5>
+                        <p class="lead text-white">Up to 50% off on electronics and more.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="position-relative">
+                    <img src="{% static 'images/new_arrivals_banner.jpg' %}" class="d-block w-100" alt="New Arrivals"
+                        style="object-fit: cover; height: 450px; filter: brightness(80%);">
+                    <div class="carousel-caption d-flex flex-column justify-content-center h-100 text-start">
+                        <h5 class="display-4 fw-bold text-white" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">New
+                            Arrivals</h5>
+                        <p class="lead text-white">Check out the latest products in stock!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="position-relative">
+                    <img src="{% static 'images/free_shipping_banner.jpg' %}" class="d-block w-100" alt="Free Shipping"
+                        style="object-fit: cover; height: 450px; filter: brightness(80%);">
+                    <div class="carousel-caption d-flex flex-column justify-content-center h-100 text-start">
+                        <h5 class="display-4 fw-bold text-white" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Free
+                            Shipping</h5>
+                        <p class="lead text-white">Order this week and enjoy free delivery.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#promoCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#promoCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="jumbotron p-5 mb-5 rounded-3 text-center position-relative overflow-hidden"
+        style="background: linear-gradient(135deg, #1d64ce, #000000); min-height: 300px;">
+        <div class="hero-overlay"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('{% static 'images/hero_background.jpg' %}') no-repeat center/cover; opacity: 0.2;">
+        </div>
+        {% if user.is_authenticated %}
+        <div class="text-center position-relative" style="z-index: 1; padding: 20px 0;">
+            <h1 class="display-4 fw-bold text-white animate__animated animate__fadeInUp" style="text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7);
+                       backdrop-filter: blur(6px);
+                       background: linear-gradient(45deg, rgba(0, 0, 0, 0.508), rgba(252, 1, 84, 0.521));
+                       padding: 10px 25px;
+                       border-radius: 8px;
+                       display: inline-block;">
+                Welcome Back, {{ username }}!
+            </h1>
+        </div>
+        <p class="lead text-light mt-3" style="position: relative; z-index: 1;">Your shopping adventure continues—check
+            your cart or explore more.</p>
+        <div class="mt-4 d-flex justify-content-center flex-wrap gap-3" style="position: relative; z-index: 1;">
+            <a href="{% url 'cart' %}" class="btn btn-lg btn-gradient me-2 px-5 py-3 fw-bold"
+                style="background: linear-gradient(45deg, #ff4d4d, #000000); color: white; border: none; transition: transform 0.3s;">🛒
+                Go to Cart ({{ cart_items.count }})</a>
+            <a href="{% url 'user_dashboard' %}" class="btn btn-lg btn-dark me-2 px-5 py-3 fw-bold"
+                style="transition: transform 0.3s;">🛍️ Shop More</a>
+            <a href="{% url 'personalized_products' %}" class="btn btn-lg btn-primary px-5 py-3 fw-bold"
+                style="transition: transform 0.3s;">🌟 Your Taste</a>
+        </div>
+        {% else %}
+        <h1 class="display-4 fw-bold text-white animate__animated animate__fadeIn"
+            style="text-shadow: 2px 2px 6px rgba(0,0,0,0.7); position: relative; z-index: 1;">Welcome to E-Commerce
+            Shopping</h1>
+        <p class="lead text-light mt-3" style="position: relative; z-index: 1;">Discover amazing deals—crafted by
+            students, inspired by the best.</p>
+        <div class="mt-4 d-flex justify-content-center flex-wrap gap-3" style="position: relative; z-index: 1;">
+            <a href="{% url 'register' %}" class="btn btn-lg btn-success me-2 px-4 py-2"
+                style="transition: transform 0.3s;">Sign Up</a>
+            <a href="{% url 'login' %}" class="btn btn-lg btn-outline-light px-4 py-2"
+                style="transition: transform 0.3s;">Log In</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Featured Products Section -->
+    <section class="mb-5" data-aos="fade-up">
+        <h2 class="mb-4 fw-bold text-center position-relative">
+            Featured Products
+            <span class="underline"
+                style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 50px; height: 4px; background: #ff4d4d; border-radius: 2px;"></span>
+        </h2>
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-md-4 col-sm-6">
+                <div class="card h-100 shadow-sm product-card border-0 position-relative overflow-hidden"
+                    style="transition: transform 0.3s, box-shadow 0.3s;">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}"
+                        style="height: 250px; object-fit: cover; transition: transform 0.3s;">
+                    {% else %}
+                    <div class="card-img-top placeholder-img"
+                        style="height: 250px; background: linear-gradient(135deg, #e0e0e0, #f5f5f5); display: flex; align-items: center; justify-content: center; color: #888;">
+                        {{ product.name }}</div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title fw-semibold">{{ product.name }}</h5>
+                        <p class="card-text text-muted small">{{ product.description|truncatewords:15 }}</p>
+                        <p class="card-text text-success fw-bold">${{ product.price }}</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 pb-3">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary w-100">Add to Cart</a>
+                        {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-outline-primary w-100">Log in to Buy</a>
+                        {% endif %}
+                    </div>
+                    <!-- Optional Badge -->
+                    {% if forloop.counter <= 3 %} <span class="badge bg-danger position-absolute top-0 start-0 m-2">Hot
+                        Deal</span>
+                        {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No products available at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Recommended Products Section -->
+    {% if user.is_authenticated %}
+    <section class="mb-5" data-aos="fade-up" data-aos-delay="200">
+        <h2 class="mt-5 mb-4 fw-bold text-center position-relative">
+            Recommended for You
+            <span class="underline"
+                style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 50px; height: 4px; background: #ff4d4d; border-radius: 2px;"></span>
+        </h2>
+        <div class="row g-4">
+            {% for product in recommended_products %}
+            <div class="col-md-4 col-sm-6">
+                <div class="card h-100 shadow-sm product-card border-0 position-relative overflow-hidden"
+                    style="transition: transform 0.3s, box-shadow 0.3s;">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}"
+                        style="height: 250px; object-fit: cover; transition: transform 0.3s;">
+                    {% else %}
+                    <div class="card-img-top placeholder-img"
+                        style="height: 250px; background: linear-gradient(135deg, #e0e0e0, #f5f5f5); display: flex; align-items: center; justify-content: center; color: #888;">
+                        {{ product.name }}</div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title fw-semibold">{{ product.name }}</h5>
+                        <p class="card-text text-muted small">{{ product.description|truncatewords:15 }}</p>
+                        <p class="card-text text-success fw-bold">${{ product.price }}</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 pb-3">
+                        <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary w-100">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No recommendations yet—start shopping to get personalized suggestions!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+
+<!-- Custom CSS -->
+<style>
+    /* Hero Overlay Animation */
+    .hero-overlay {
+        animation: subtleFade 10s infinite;
+    }
+
+    @keyframes subtleFade {
+
+        0%,
+        100% {
+            opacity: 0.2;
+        }
+
+        50% {
+            opacity: 0.3;
+        }
+    }
+
+    /* Button Hover Effects */
+    .btn-gradient:hover,
+    .btn-dark:hover,
+    .btn-primary:hover,
+    .btn-success:hover,
+    .btn-outline-light:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Product Card Hover */
+    .product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    .product-card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+
+    /* Dark Mode Adjustments */
+    [data-bs-theme="dark"] .jumbotron {
+        background: linear-gradient(135deg, #2c3e50, #4a5568);
+    }
+
+    [data-bs-theme="dark"] .lead,
+    [data-bs-theme="dark"] .text-muted {
+        color: #d1d5db;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-light {
+        border-color: #fff;
+        color: #fff;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-light:hover {
+        background: #fff;
+        color: #000;
+    }
+
+    [data-bs-theme="dark"] .placeholder-img {
+        background: linear-gradient(135deg, #4a5568, #2c3e50);
+        color: #a0aec0;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .carousel-caption {
+            display: none !important;
+        }
+
+        .jumbotron {
+            padding: 3rem;
+            min-height: 250px;
+        }
+
+        .btn-lg {
+            font-size: 1rem;
+            padding: 0.75rem 1.5rem;
+        }
+
+        .display-4 {
+            font-size: 2.5rem;
+        }
+    }
+</style>
+
+<!-- Include Animate.css and AOS for animations -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+    AOS.init({ duration: 1000, once: true });
+</script>
+
+{% endblock %}
