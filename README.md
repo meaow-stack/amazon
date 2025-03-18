@@ -271,6 +271,7 @@ git push origin main
 when we use search it also shoes products as well as recommended products
 ![Screenshot 2025-03-18 174301](https://github.com/user-attachments/assets/b803400a-0f56-4b2e-843d-9f867b9e3527)
 ![Screenshot 2025-03-18 173744](https://github.com/user-attachments/assets/46b200da-9f06-4b9a-8a96-bb8825f12aa8)
+![1000041448](https://github.com/user-attachments/assets/1f46ffde-6e15-4926-b618-337dfd92d86f)
 
 
 
