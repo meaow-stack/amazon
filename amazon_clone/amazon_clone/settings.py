@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
     'shop',  # Already included, keeping it here
 ]
 
@@ -130,3 +131,10 @@ STRIPE_PUBLIC_KEY = 'pk_test_51R03msPAalJLPuSTTqQQjeSuQjbu2XdKvMDIp6s76IyxKuBRTN
 STRIPE_SECRET_KEY = 'sk_test_51R03msPAalJLPuSTTUO69PBD7dyFMZTUOgHMZ2QawjAQM51X6pRaRn7k9J0EHDvVNQwizQjKHccFMYtaWnnXp3lG00SDmh9Xes'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Example for Gmail
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'sayantanmukherjee000gmail.com'
+EMAIL_HOST_PASSWORD = 'your-app-password'

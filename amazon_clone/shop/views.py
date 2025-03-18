@@ -12,25 +12,73 @@ from django.views.decorators.http import require_POST
 from .models import User, Product, Cart, CartItem
 import stripe
 from .recomendations import get_recommendations  # Assuming this is your recommendation module
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .forms import SignUpForm
+from .utils import send_verification_email
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth import login
+from django.contrib.auth.tokens import default_token_generator
+from .models import User
+from .models import Order
+from .models import Address  # Assuming you have an Address model
+from .forms import AddressForm
+
+
 
 # Stripe configuration
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-# Home view: Main landing page for all users
 def home(request):
-    """Renders the home page with featured products and personalized content for logged-in users."""
+    """Renders the home page with featured products, personalized content, weather, and order status."""
     products = Product.objects.all()
     context = {'products': products}
 
     if request.user.is_authenticated:
+        # Cart handling
         cart, _ = Cart.objects.get_or_create(user=request.user)
         context['cart_items'] = cart.cartitem_set.all()
         context['username'] = request.user.username
+
+        # Product Recommendations
         try:
             context['recommended_products'] = get_recommendations(request.user)[:5]
         except Exception as e:
             messages.error(request, f"Recommendations unavailable: {str(e)}")
             context['recommended_products'] = Product.objects.order_by('?')[:5]
+
+        # User Address
+        try:
+            address_obj = request.user.address  # OneToOne relation
+            context['address'] = f"{address_obj.city}, {address_obj.state}"
+        except Address.DoesNotExist:
+            context['address'] = "Set your address"
+            address_obj = None  # set None so weather section won't try to use it
+
+        # Weather Information
+        weather_info = "Weather unavailable"
+        if address_obj:
+            try:
+                api_key = "YOUR_OPENWEATHERMAP_API_KEY"  # Replace with your actual API key
+                city = address_obj.city
+                url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
+                response = requests.get(url).json()
+                if response.get("cod") == 200:
+                    temp = response["main"]["temp"]
+                    condition = response["weather"][0]["main"]
+                    weather_info = f"{temp}°C, {condition}"
+                    if "Rain" in condition or "Snow" in condition or temp < 0 or temp > 35:
+                        weather_info += " (Not ideal for delivery)"
+                    else:
+                        weather_info += " (Good for delivery)"
+                else:
+                    weather_info = "City not found"
+            except Exception as e:
+                weather_info = f"Weather fetch failed: {str(e)}"
+        context['weather_info'] = weather_info
+
+        # Delivery Status (Last 5 orders)
+        context['orders'] = Order.objects.filter(user=request.user).order_by('-created_at')[:5]
 
     return render(request, 'home.html', context)
 
@@ -98,21 +146,22 @@ def user_logout(request):
     return redirect('home')
 
 # Register view: Creates a new user account
+
+
 def register(request):
-    """Handles user registration with username, email, and password."""
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        email = request.POST['email']
-        try:
-            user = User.objects.create_user(username=username, email=email, password=password, is_admin=False)
-            user.save()
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
             login(request, user)
-            messages.success(request, f'Welcome, {user.username}! Account created!')
+            messages.success(request, "Registration successful!")
             return redirect('home')
-        except IntegrityError:
-            messages.error(request, f'The username "{username}" is already taken. Please try another.')
-    return render(request, 'register.html')
+        else:
+            print("Form errors:", form.errors)  # Debug output
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = SignUpForm()
+    return render(request, 'register.html', {'form': form})
 
 # User Dashboard: Main page for logged-in users
 @login_required
@@ -336,4 +385,120 @@ def delete_cart_item(request, cart_item_id):
     cart_item.delete()
     messages.success(request, f'{product_name} removed from cart!')
     return redirect('cart')
+
+
+def verify_email(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        messages.success(request, "Email verified! You’re now logged in.")
+        return redirect('home')
+    else:
+        messages.error(request, "Invalid verification link.")
+        return redirect('signup')
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            send_verification_email(user, request)
+            messages.success(request, "Please check your email to verify your account.")
+            return redirect('login')
+    else:
+        form = SignUpForm()
+    return render(request, 'signup.html', {'form': form})
+@login_required
+def profile_view(request):
+    form = None
+    address = None
+    cart_items = []
+    orders = []
+
+    if request.user.is_authenticated:
+        # Try to get the user's address (OneToOne)
+        address, created = Address.objects.get_or_create(user=request.user)
+
+        if request.method == 'POST':
+            form = AddressForm(request.POST, instance=address)
+            if form.is_valid():
+                form.save()
+                return redirect('profile')
+        else:
+            form = AddressForm(instance=address)
+
+        # Fetch cart items
+        cart = Cart.objects.filter(user=request.user).first()
+        if cart:
+            cart_items = CartItem.objects.filter(cart=cart)
+
+        # Fetch orders
+        orders = Order.objects.filter(user=request.user).order_by('-id')[:5]
+
+    context = {
+        'form': form,
+        'address': address,
+        'cart_items': cart_items,
+        'orders': orders,
+    }
+    return render(request, 'profile.html', context)
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        user = request.user
+        user.first_name = request.POST.get('first_name', user.first_name)
+        user.last_name = request.POST.get('last_name', user.last_name)
+        user.email = request.POST.get('email', user.email)
+        user.address = request.POST.get('address', user.address)
+        user.phone = request.POST.get('phone', user.phone)
+        user.save()
+        messages.success(request, 'Profile updated successfully!')
+        return redirect('profile')
+
+    return render(request, 'edit_profile.html')
+def orders(request):
+    return render(request, 'orders.html')
+
+# shop/views.py
+from django.shortcuts import render
+from django.contrib.auth.models import User
+
+def manage_users(request):
+    users = User.objects.all()
+    return render(request, 'manage_users.html', {'users': users})
+
+def set_address(request):
+    user = request.user
+    try:
+        address = Address.objects.get(user=user)
+    except Address.DoesNotExist:
+        address = None
+
+    if request.method == 'POST':
+        form = AddressForm(request.POST, instance=address)
+        if form.is_valid():
+            addr = form.save(commit=False)
+            addr.user = user
+            addr.save()
+            return redirect('profile')  # or homepage or any other page
+    else:
+        form = AddressForm(instance=address)
+
+    return render(request, 'set_address.html', {'form': form})
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.conf import settings
+from .models import Address
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_address_for_user(sender, instance, created, **kwargs):
+    if created:
+        Address.objects.create(user=instance)
 

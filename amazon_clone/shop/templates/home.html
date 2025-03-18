@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<div class="container">
+<div class="container py-5">
     <!-- Promotional Carousel -->
     <div id="promoCarousel" class="carousel slide mb-5" data-bs-ride="carousel" data-bs-interval="5000">
         <div class="carousel-indicators">
@@ -58,19 +58,15 @@
 
     <!-- Hero Section -->
     <div class="jumbotron p-5 mb-5 rounded-3 text-center position-relative overflow-hidden"
-        style="background: linear-gradient(135deg, #1d64ce, #000000); min-height: 300px;">
+        style="background: linear-gradient(135deg, #2c3e50, #4a5568); min-height: 300px;">
         <div class="hero-overlay"
             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('{% static 'images/hero_background.jpg' %}') no-repeat center/cover; opacity: 0.2;">
         </div>
         {% if user.is_authenticated %}
         <div class="text-center position-relative" style="z-index: 1; padding: 20px 0;">
-            <h1 class="display-4 fw-bold text-white animate__animated animate__fadeInUp" style="text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7);
-                       backdrop-filter: blur(6px);
-                       background: linear-gradient(45deg, rgba(0, 0, 0, 0.508), rgba(252, 1, 84, 0.521));
-                       padding: 10px 25px;
-                       border-radius: 8px;
-                       display: inline-block;">
-                Welcome Back, {{ username }}!
+            <h1 class="display-4 fw-bold text-white animate__animated animate__fadeInUp"
+                style="text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7); backdrop-filter: blur(6px); background: linear-gradient(45deg, rgba(0, 0, 0, 0.508), rgba(252, 1, 84, 0.521)); padding: 10px 25px; border-radius: 8px; display: inline-block;">
+                Welcome Back, {{ user.username }}!
             </h1>
         </div>
         <p class="lead text-light mt-3" style="position: relative; z-index: 1;">Your shopping adventure continues—check
@@ -101,7 +97,7 @@
 
     <!-- Featured Products Section -->
     <section class="mb-5" data-aos="fade-up">
-        <h2 class="mb-4 fw-bold text-center position-relative">
+        <h2 class="mb-4 fw-bold text-center position-relative text-light">
             Featured Products
             <span class="underline"
                 style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 50px; height: 4px; background: #ff4d4d; border-radius: 2px;"></span>
@@ -110,16 +106,17 @@
             {% for product in products %}
             <div class="col-md-4 col-sm-6">
                 <div class="card h-100 shadow-sm product-card border-0 position-relative overflow-hidden"
-                    style="transition: transform 0.3s, box-shadow 0.3s;">
+                    style="transition: transform 0.3s, box-shadow 0.3s; background: #2c3034;">
                     {% if product.image %}
                     <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}"
                         style="height: 250px; object-fit: cover; transition: transform 0.3s;">
                     {% else %}
                     <div class="card-img-top placeholder-img"
-                        style="height: 250px; background: linear-gradient(135deg, #e0e0e0, #f5f5f5); display: flex; align-items: center; justify-content: center; color: #888;">
-                        {{ product.name }}</div>
+                        style="height: 250px; background: linear-gradient(135deg, #4a5568, #2c3e50); display: flex; align-items: center; justify-content: center; color: #a0aec0;">
+                        {{ product.name }}
+                    </div>
                     {% endif %}
-                    <div class="card-body">
+                    <div class="card-body text-light">
                         <h5 class="card-title fw-semibold">{{ product.name }}</h5>
                         <p class="card-text text-muted small">{{ product.description|truncatewords:15 }}</p>
                         <p class="card-text text-success fw-bold">${{ product.price }}</p>
@@ -131,7 +128,6 @@
                         <a href="{% url 'login' %}" class="btn btn-outline-primary w-100">Log in to Buy</a>
                         {% endif %}
                     </div>
-                    <!-- Optional Badge -->
                     {% if forloop.counter <= 3 %} <span class="badge bg-danger position-absolute top-0 start-0 m-2">Hot
                         Deal</span>
                         {% endif %}
@@ -148,7 +144,7 @@
     <!-- Recommended Products Section -->
     {% if user.is_authenticated %}
     <section class="mb-5" data-aos="fade-up" data-aos-delay="200">
-        <h2 class="mt-5 mb-4 fw-bold text-center position-relative">
+        <h2 class="mt-5 mb-4 fw-bold text-center position-relative text-light">
             Recommended for You
             <span class="underline"
                 style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 50px; height: 4px; background: #ff4d4d; border-radius: 2px;"></span>
@@ -157,16 +153,17 @@
             {% for product in recommended_products %}
             <div class="col-md-4 col-sm-6">
                 <div class="card h-100 shadow-sm product-card border-0 position-relative overflow-hidden"
-                    style="transition: transform 0.3s, box-shadow 0.3s;">
+                    style="transition: transform 0.3s, box-shadow 0.3s; background: #2c3034;">
                     {% if product.image %}
                     <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}"
                         style="height: 250px; object-fit: cover; transition: transform 0.3s;">
                     {% else %}
                     <div class="card-img-top placeholder-img"
-                        style="height: 250px; background: linear-gradient(135deg, #e0e0e0, #f5f5f5); display: flex; align-items: center; justify-content: center; color: #888;">
-                        {{ product.name }}</div>
+                        style="height: 250px; background: linear-gradient(135deg, #4a5568, #2c3e50); display: flex; align-items: center; justify-content: center; color: #a0aec0;">
+                        {{ product.name }}
+                    </div>
                     {% endif %}
-                    <div class="card-body">
+                    <div class="card-body text-light">
                         <h5 class="card-title fw-semibold">{{ product.name }}</h5>
                         <p class="card-text text-muted small">{{ product.description|truncatewords:15 }}</p>
                         <p class="card-text text-success fw-bold">${{ product.price }}</p>
@@ -188,7 +185,6 @@
 
 <!-- Custom CSS -->
 <style>
-    /* Hero Overlay Animation */
     .hero-overlay {
         animation: subtleFade 10s infinite;
     }
@@ -205,7 +201,6 @@
         }
     }
 
-    /* Button Hover Effects */
     .btn-gradient:hover,
     .btn-dark:hover,
     .btn-primary:hover,
@@ -215,7 +210,6 @@
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
-    /* Product Card Hover */
     .product-card:hover {
         transform: translateY(-10px);
         box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2) !important;
@@ -225,32 +219,10 @@
         transform: scale(1.05);
     }
 
-    /* Dark Mode Adjustments */
-    [data-bs-theme="dark"] .jumbotron {
-        background: linear-gradient(135deg, #2c3e50, #4a5568);
+    .text-muted {
+        color: #adb5bd !important;
     }
 
-    [data-bs-theme="dark"] .lead,
-    [data-bs-theme="dark"] .text-muted {
-        color: #d1d5db;
-    }
-
-    [data-bs-theme="dark"] .btn-outline-light {
-        border-color: #fff;
-        color: #fff;
-    }
-
-    [data-bs-theme="dark"] .btn-outline-light:hover {
-        background: #fff;
-        color: #000;
-    }
-
-    [data-bs-theme="dark"] .placeholder-img {
-        background: linear-gradient(135deg, #4a5568, #2c3e50);
-        color: #a0aec0;
-    }
-
-    /* Responsive Adjustments */
     @media (max-width: 768px) {
         .carousel-caption {
             display: none !important;
@@ -272,12 +244,11 @@
     }
 </style>
 
-<!-- Include Animate.css and AOS for animations -->
+<!-- Include Animate.css and AOS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 <script>
     AOS.init({ duration: 1000, once: true });
 </script>
-
 {% endblock %}

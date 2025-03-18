@@ -1,0 +1,78 @@
+<!-- profile.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-white mb-4 bg-primary p-2 rounded">Your Profile</h2>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card bg-dark text-white">
+                <div class="card-body">
+                    <h4 class="card-title">{{ request.user.username|title }}</h4>
+                    <p><strong>Email:</strong> {{ request.user.email }}</p>
+                    <p><strong>Address:</strong> {{ address.address_line }}, {{ address.city }}, {{ address.state }}, {{ address.postal_code }}, {{ address.country }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Summary -->
+        <div class="col-md-6 mb-4">
+            <div class="card bg-dark text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Cart Summary</h5>
+                    {% if cart_items %}
+                        <ul class="list-group">
+                            {% for item in cart_items %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ item.product.name }}
+                                    <span class="badge bg-primary rounded-pill">{{ item.quantity }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No items in cart.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card bg-dark text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Recent Orders</h5>
+                    {% if orders %}
+                        <ul class="list-group">
+                            {% for order in orders %}
+                                <li class="list-group-item">
+                                    Order #{{ order.id }} - {{ order.created_at|date:"d M Y" }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No recent orders.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Address Form -->
+    <div class="row">
+        <div class="col-md-12 mt-4">
+            <div class="card p-4">
+                <h5>Update Address</h5>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-success mt-2">Save Address</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
