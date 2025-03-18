@@ -218,11 +218,11 @@ Push to branch: git push origin feature/YourFeature
 Open a pull request
 
  Contact
-Author: Your Name
+Author: Sayantan Mukherjee
 
-Email: your.email@example.com
+Email: sayantanmukherjee000@gmail.com 
 
-GitHub: yourusername
+GitHub: meaow-stack
 
  Show Your Support
 If you like this project, give it a star on GitHub! 
