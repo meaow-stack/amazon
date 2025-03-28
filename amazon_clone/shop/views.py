@@ -23,6 +23,10 @@ from .models import User
 from .models import Order
 from .models import Address  # Assuming you have an Address model
 from .forms import AddressForm
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth import authenticate, login, logout, get_user_model
+
+
 
 
 
@@ -83,20 +87,47 @@ def home(request):
     return render(request, 'home.html', context)
 
 # Login view: Authenticates users
+# Dynamically get the User model
+User = get_user_model()
+# Debug: Print the User model to confirm
+print(f"User model in views.py: {User}")
+
 def user_login(request):
-    """Handles user login with username and password."""
+    if request.user.is_authenticated:
+        if request.user.is_staff:
+            next_url = request.GET.get('next', 'admin_dashboard')
+            print(f"Authenticated user: {request.user.username}, is_staff: {request.user.is_staff}, redirecting to: {next_url}")
+            if request.user.username == 'admin1' and 'manage-users' in next_url:
+                return redirect('manage_users')
+            return redirect(next_url)
+        else:
+            print(f"User {request.user.username} is not staff, redirecting to home")
+            messages.error(request, "You do not have permission to access the admin dashboard.")
+            return redirect('home')
+
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            messages.success(request, f'Welcome back, {user.username}!')
-            return redirect('home')
+            user = User.objects.get(username=user.username)
+            request.user = user
+            if user.is_staff:
+                next_url = request.POST.get('next', 'admin_dashboard')
+                print(f"Logged in user: {user.username}, is_staff: {user.is_staff}, redirecting to: {next_url}")
+                if user.username == 'admin1' and 'manage-users' in next_url:
+                    return redirect('manage_users')
+                return redirect(next_url)
+            else:
+                print(f"User {user.username} is not staff, redirecting to user_dashboard")
+                messages.success(request, f"Welcome, {user.username}!")
+                return redirect('home')
         else:
-            messages.error(request, 'Invalid username or password.')
-    return render(request, 'login.html')
-
+            messages.error(request, "Invalid username or password.")
+    
+    next_url = request.GET.get('next', '')
+    return render(request, 'login.html', {'next': next_url})
 # Personalized Products view: Dedicated page for user-specific recommendations
 @login_required
 def personalized_products(request):
@@ -467,11 +498,46 @@ def orders(request):
 
 # shop/views.py
 from django.shortcuts import render
-from django.contrib.auth.models import User
 
+@staff_member_required(login_url='login')
 def manage_users(request):
-    users = User.objects.all()
-    return render(request, 'manage_users.html', {'users': users})
+    print(f"User authenticated: {request.user.is_authenticated}")
+    print(f"User is staff: {request.user.is_staff}")
+    print(f"User: {request.user.username if request.user.is_authenticated else 'Anonymous'}")
+
+    # Debug: Print the User model being used
+    print(f"User model in manage_users: {User}")
+    users = User.objects.all()  # Should use shop.User via get_user_model()
+
+    if request.method == 'POST':
+        if 'make_staff' in request.POST:
+            user_id = request.POST.get('user_id')
+            user = get_object_or_404(User, id=user_id)
+            user.is_staff = True
+            user.save()
+            messages.success(request, f"{user.username} is now a staff member!")
+            return redirect('manage_users')
+        elif 'remove_staff' in request.POST:
+            user_id = request.POST.get('user_id')
+            user = get_object_or_404(User, id=user_id)
+            user.is_staff = False
+            user.save()
+            messages.success(request, f"{user.username} is no longer a staff member.")
+            return redirect('manage_users')
+        elif 'delete_user' in request.POST:
+            user_id = request.POST.get('user_id')
+            user = get_object_or_404(User, id=user_id)
+            if user == request.user:
+                messages.error(request, "You cannot delete your own account.")
+            else:
+                user.delete()
+                messages.success(request, f"{user.username} has been deleted.")
+            return redirect('manage_users')
+
+    context = {
+        'users': users,
+    }
+    return render(request, 'manage_users.html', context)
 
 def set_address(request):
     user = request.user
@@ -502,3 +568,19 @@ def create_address_for_user(sender, instance, created, **kwargs):
     if created:
         Address.objects.create(user=instance)
 
+@staff_member_required(login_url='login')
+def edit_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        if username and email:
+            user.username = username
+            user.email = email
+            user.save()
+            messages.success(request, f"{user.username}'s details updated successfully!")
+            return redirect('manage_users')
+        else:
+            messages.error(request, "Please fill in all fields.")
+    context = {'user': user}
+    return render(request, 'edit_user.html', context)
