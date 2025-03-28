@@ -1,26 +1,165 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
-    <div class="container mt-5">
-        <h2 class="mb-4">Manage Users</h2>
-        <table class="table table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Date Joined</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                    <tr>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.date_joined }}</td>
-                    </tr>
-                {% empty %}
-                    <tr><td colspan="3">No users found.</td></tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<!-- Background with a professional gradient effect -->
+<style>
+    body {
+        background: linear-gradient(135deg, #1e3c72, #2a5298, #203a43);
+        color: white;
+        font-family: 'Poppins', sans-serif;
+    }
+    .admin-panel {
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: 15px;
+        padding: 20px;
+    }
+    .table th, .table td {
+        vertical-align: middle;
+    }
+    .btn-custom {
+        transition: all 0.3s ease-in-out;
+    }
+    .btn-custom:hover {
+        transform: scale(1.05);
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 admin-panel shadow-lg">
+            <h4 class="text-uppercase mb-4 text-center">Admin Panel</h4>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link text-white py-2" href="{% url 'admin_dashboard' %}">
+                        📊 Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white py-2" href="{% url 'add_product' %}">
+                        ➕ Add Product
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white py-2" href="{% url 'orders' %}">
+                        📦 Orders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active bg-warning text-dark py-2 rounded" href="{% url 'manage_users' %}">
+                        👥 Manage Users
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10">
+            <div class="admin-panel shadow-lg p-4">
+                
+                <!-- Professional User GIF -->
+                <div class="text-center mb-4">
+                    <img src="https://media.giphy.com/media/VbnUQpnihPSIgIXuZv/giphy.gif" 
+                         alt="User Management GIF" class="img-fluid rounded shadow-lg" style="max-height: 250px;">
+                </div>
+
+                <h2 class="text-center mb-4 fw-bold">Manage Users</h2>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="badge bg-info fs-5 px-3 py-2">Total Users: {{ users|length }}</span>
+                    <a href="{% url 'register' %}" class="btn btn-primary btn-lg btn-custom">➕ Add New User</a>
+                </div>
+
+                <!-- User Table -->
+                <div class="table-responsive">
+                    <table class="table table-hover text-center align-middle rounded">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>👤 Username</th>
+                                <th>📧 Email</th>
+                                <th>📅 Date Joined</th>
+                                <th>⚙️ Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr class="table-light text-dark">
+                                <td class="fw-bold">{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                                <td>
+                                    <a href="{% url 'edit_user' user.id %}" class="btn btn-sm btn-warning me-1 btn-custom">✏️ Edit</a>
+
+                                    <!-- Delete Button -->
+                                    <form method="post" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="user_id" value="{{ user.id }}">
+                                        <button type="submit" name="delete_user" class="btn btn-sm btn-danger me-1 btn-custom"
+                                            onclick="return confirm('Are you sure you want to delete {{ user.username }}?');">
+                                            🗑️ Delete
+                                        </button>
+                                    </form>
+
+                                    <!-- Staff Role Toggle -->
+                                    {% if user.is_staff %}
+                                    <form method="post" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="user_id" value="{{ user.id }}">
+                                        <button type="submit" name="remove_staff" class="btn btn-sm btn-secondary btn-custom">
+                                            🔽 Remove Staff
+                                        </button>
+                                    </form>
+                                    {% else %}
+                                    <form method="post" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="user_id" value="{{ user.id }}">
+                                        <button type="submit" name="make_staff" class="btn btn-sm btn-success btn-custom">
+                                            🔼 Make Staff
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center py-3 text-muted">🚀 No users found. Add some users to get started!</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                {% if is_paginated %}
+                <nav class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">⬅️ Previous</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled"><span class="page-link">⬅️ Previous</span></li>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next ➡️</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled"><span class="page-link">Next ➡️</span></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+        </div>
     </div>
+</div>
 {% endblock %}
