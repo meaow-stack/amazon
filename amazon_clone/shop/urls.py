@@ -31,5 +31,7 @@ urlpatterns = [
     path('admin/orders/', views.orders, name='orders'),
     path('manage-users/', views.manage_users, name='manage_users'),
     path('set-address/', views.set_address, name='set_address'),
+    path('manage-users/', views.manage_users, name='manage_users'),
+    path('edit-user/<int:user_id>/', views.edit_user, name='edit_user'),  # 🔥 Add this line
     #path('profile/', views.profile, name='profile'),
 ]
