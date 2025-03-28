@@ -257,6 +257,7 @@ git add README.md
 git commit -m "Update README with detailed project info"
 git push origin main
 
+(THERE ARE UPDATED SCREENSHOTS AT THE END )
 ![Screenshot 2025-03-18 173421](https://github.com/user-attachments/assets/a0925387-4e51-477e-a1f5-147e61223419)
 ![Screenshot 2025-03-18 173432](https://github.com/user-attachments/assets/aada59f0-eb47-46b8-bb8a-ceea678a77ad)
 ![Screenshot 2025-03-18 173439](https://github.com/user-attachments/assets/0247eb4c-2874-4431-a95d-069eb2805da4)
@@ -272,6 +273,26 @@ when we use search it also shoes products as well as recommended products
 ![Screenshot 2025-03-18 174301](https://github.com/user-attachments/assets/b803400a-0f56-4b2e-843d-9f867b9e3527)
 ![Screenshot 2025-03-18 173744](https://github.com/user-attachments/assets/46b200da-9f06-4b9a-8a96-bb8825f12aa8)
 ![1000041448](https://github.com/user-attachments/assets/1f46ffde-6e15-4926-b618-337dfd92d86f)
+
+I have updated the screenshots to show a better representation of the websites I have built, particularly for the home pages. They now show a better representation of the websites' appearance, navigation, and other features. I believe that these improved screenshots will be helpful in showing off the quality of work I do and the care that I put into each of my websites.
+![Screenshot 2025-03-28 205609](https://github.com/user-attachments/assets/a08170e7-1c62-448b-91c7-849457e815b9)
+![Screenshot 2025-03-28 205549](https://github.com/user-attachments/assets/0f077692-a046-43b1-8cdc-77650508dad0)![Screenshot 2025-03-28 210406](https://github.com/user-attachments/assets/fa501e65-d464-4598-9100-8f93accfe46e)
+![Screenshot 2025-03-28 210401](https://github.com/user-attachments/assets/c729f081-b9fe-43d4-81be-8b8e86a5d850)
+![Screenshot 2025-03-28 210352](https://github.com/user-attachments/assets/90977e13-6f60-4553-9606-1c78d550a4cf)
+![Screenshot 2025-03-28 210340](https://github.com/user-attachments/assets/91a923a5-a4bd-4c27-9a69-ee15a395a72e)
+![Screenshot 2025-03-28 210331](https://github.com/user-attachments/assets/3a033e89-5311-4d8a-883e-94fce12eea48)
+![Screenshot 2025-03-28 210322](https://github.com/user-attachments/assets/27766208-733c-45d1-b6a3-d19371a7f8ef)
+![Screenshot 2025-03-28 210244](https://github.com/user-attachments/assets/5c920a26-c044-4bc7-b07b-3f1ff84e24dc)
+![Screenshot 2025-03-28 210230](https://github.com/user-attachments/assets/a22fc357-66ce-4739-9581-a6e81bd23b2b)
+![Screenshot 2025-03-28 210213](https://github.com/user-attachments/assets/86499ae9-753a-44c1-a4d4-d22365cb9869)
+![Screenshot 2025-03-28 210205](https://github.com/user-attachments/assets/882b710d-4c83-4ff4-a75b-fa10f22a6d10)
+![Screenshot 2025-03-28 210154](https://github.com/user-attachments/assets/c5ecef36-2fb2-4261-8b4a-4c58549a0995)
+![Screenshot 2025-03-28 210148](https://github.com/user-attachments/assets/2d675c70-dd76-4b6f-a88c-b3ea0c219e4d)
+![Screenshot 2025-03-28 205621](https://github.com/user-attachments/assets/0ebd7a38-2a20-4e71-817e-65d24f5cebcf)
+![Screenshot 2025-03-28 205609](https://github.com/user-attachments/assets/a1d1feb9-1c36-4c7e-a66e-a30d2a978d3e)
+
+
+
 
 
 
