@@ -1,61 +1,103 @@
 {% extends 'base.html' %}
 {% block content %}
+
 <style>
+    /* Orders Section */
     .orders-section {
-        background: #f8f9fa;
-        padding: 40px 20px;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        transition: 0.3s ease-in-out;
+        background: #ffffff;
+        padding: 40px 25px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: all 0.3s ease-in-out;
+        max-width: 600px;
+        margin: auto;
     }
 
     .orders-section:hover {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     }
 
+    /* Heading */
     .orders-heading {
-        font-weight: 700;
-        color: #343a40;
-        margin-bottom: 25px;
-        text-align: center;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 20px;
     }
 
     .orders-subtext {
-        font-size: 18px;
-        color: #6c757d;
-        text-align: center;
+        font-size: 17px;
+        color: #7b8a8b;
+        margin-bottom: 20px;
     }
 
+    /* Admin Image */
     .admin-image {
         display: block;
-        margin: 30px auto 20px;
-        width: 180px;
+        margin: 20px auto;
+        width: 150px;
         height: auto;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-radius: 8px;
+        transition: transform 0.3s ease-in-out;
     }
 
+    .admin-image:hover {
+        transform: scale(1.05);
+    }
+
+    /* Add Orders Button */
     .btn-add-orders {
-        display: block;
-        margin: 30px auto 0;
+        display: inline-block;
         font-size: 16px;
-        padding: 12px 30px;
+        padding: 12px 25px;
+        font-weight: 600;
+        border-radius: 8px;
+        background: #007bff;
+        color: #fff;
+        text-decoration: none;
+        transition: background 0.3s ease-in-out, transform 0.2s;
+    }
+
+    .btn-add-orders:hover {
+        background: #0056b3;
+        transform: scale(1.05);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .orders-section {
+            padding: 30px 15px;
+        }
+
+        .orders-heading {
+            font-size: 22px;
+        }
+
+        .orders-subtext {
+            font-size: 16px;
+        }
+
+        .btn-add-orders {
+            font-size: 15px;
+            padding: 10px 20px;
+        }
     }
 </style>
 
 <div class="container mt-5">
     <div class="orders-section">
-        <h2 class="orders-heading"><i class="fas fa-boxes"></i> Orders Management Dashboard</h2>
+        <h2 class="orders-heading"><i class="fas fa-boxes"></i> Orders Management</h2>
         <p class="orders-subtext">
-            Welcome to the Admin Orders Panel. You can manage, view, and process customer orders here.
+            Welcome to the Admin Orders Panel. You can manage, view, and process customer orders here.  
             More features coming soon!
         </p>
 
         <img src="https://cdn-icons-png.flaticon.com/512/5087/5087579.png" alt="Orders Illustration" class="admin-image">
 
-        <a href="#" class="btn btn-primary btn-add-orders">
+        <a href="#" class="btn-add-orders">
             <i class="fas fa-plus-circle"></i> Add New Orders (Coming Soon)
         </a>
     </div>
 </div>
+
 {% endblock %}

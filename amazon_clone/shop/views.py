@@ -1,7 +1,7 @@
 import os
 import random
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib import messages
@@ -9,26 +9,29 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.db import IntegrityError
 from django.views.decorators.http import require_POST
-from .models import User, Product, Cart, CartItem
-import stripe
-from .recomendations import get_recommendations  # Assuming this is your recommendation module
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .forms import SignUpForm
+from django.contrib.admin.views.decorators import staff_member_required
+from .models import Product, Cart, CartItem, Order, Address
+from .recomendations import get_recommendations
+from .forms import SignUpForm, AddressForm
 from .utils import send_verification_email
 from django.utils.http import urlsafe_base64_decode
-from django.contrib.auth import login
 from django.contrib.auth.tokens import default_token_generator
-from .models import User
+import stripe
+from .models import User, Product, Cart, CartItem
+from django.shortcuts import render, redirect,get_object_or_404
+from django.core.paginator import Paginator  # For splitting users into pages
+from django.contrib.admin.views.decorators import staff_member_required  # Restrict to admins
+from django.contrib import messages  # For showing success/error messages
 from .models import Order
-from .models import Address  # Assuming you have an Address model
-from .forms import AddressForm
 
 
 
+# Dynamically get the User model
+User = get_user_model()
+# Debug: Print the User model to confirm
+print(f"User model in views.py: {User}")
 # Stripe configuration
 stripe.api_key = settings.STRIPE_SECRET_KEY
-
 def home(request):
     """Renders the home page with featured products, personalized content, weather, and order status."""
     products = Product.objects.all()
@@ -84,18 +87,38 @@ def home(request):
 
 # Login view: Authenticates users
 def user_login(request):
-    """Handles user login with username and password."""
+    if request.user.is_authenticated:
+        if request.user.is_staff:
+            next_url = request.GET.get('next', 'admin_dashboard')
+            # Trick: If the user is admin1 and trying to access manage_users, force redirect
+            if request.user.username == 'admin1' and 'manage-users' in next_url:
+                return redirect('manage_users')
+            return redirect(next_url)
+        else:
+            messages.error(request, "You do not have permission to access the admin dashboard.")
+            return redirect('home')
+
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            messages.success(request, f'Welcome back, {user.username}!')
-            return redirect('home')
+            if user.is_staff:
+                next_url = request.POST.get('next', 'admin_dashboard')
+                # Trick: If the user is admin1 and trying to access manage_users, force redirect
+                if user.username == 'admin1' and 'manage-users' in next_url:
+                    return redirect('manage_users')
+                return redirect(next_url)
+            else:
+                messages.success(request, f"Welcome, {user.username}!")
+                return redirect('home')
         else:
-            messages.error(request, 'Invalid username or password.')
-    return render(request, 'login.html')
+            messages.error(request, "Invalid username or password.")
+    
+    # Pass the 'next' parameter to the template
+    next_url = request.GET.get('next', '')
+    return render(request, 'login.html', {'next': next_url})
 
 # Personalized Products view: Dedicated page for user-specific recommendations
 @login_required
@@ -466,13 +489,43 @@ def orders(request):
     return render(request, 'orders.html')
 
 # shop/views.py
-from django.shortcuts import render
-from django.contrib.auth.models import User
-
+@staff_member_required(login_url='login')
 def manage_users(request):
-    users = User.objects.all()
-    return render(request, 'manage_users.html', {'users': users})
+    print(f"User authenticated: {request.user.is_authenticated}")
+    print(f"User is staff: {request.user.is_staff}")
+    print(f"User: {request.user.username if request.user.is_authenticated else 'Anonymous'}")
 
+    users = User.objects.all()  # Use shop.models.User
+
+    if request.method == 'POST':
+        if 'make_staff' in request.POST:
+            user_id = request.POST.get('user_id')
+            user = get_object_or_404(User, id=user_id)  # Use shop.models.User
+            user.is_staff = True
+            user.save()
+            messages.success(request, f"{user.username} is now a staff member!")
+            return redirect('manage_users')
+        elif 'remove_staff' in request.POST:
+            user_id = request.POST.get('user_id')
+            user = get_object_or_404(User, id=user_id)  # Use shop.models.User
+            user.is_staff = False
+            user.save()
+            messages.success(request, f"{user.username} is no longer a staff member.")
+            return redirect('manage_users')
+        elif 'delete_user' in request.POST:
+            user_id = request.POST.get('user_id')
+            user = get_object_or_404(User, id=user_id)  # Use shop.models.User
+            if user == request.user:
+                messages.error(request, "You cannot delete your own account.")
+            else:
+                user.delete()
+                messages.success(request, f"{user.username} has been deleted.")
+            return redirect('manage_users')
+
+    context = {
+        'users': users,
+    }
+    return render(request, 'manage_users.html', context)
 def set_address(request):
     user = request.user
     try:
@@ -502,3 +555,18 @@ def create_address_for_user(sender, instance, created, **kwargs):
     if created:
         Address.objects.create(user=instance)
 
+@staff_member_required(login_url='login')
+def edit_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)  # Use shop.User
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        if username and email:
+            user.username = username
+            user.email = email
+            user.save()
+            messages.success(request, f"{user.username}'s details updated successfully!")
+            return redirect('manage_users')
+        else:
+            messages.error(request, "Please fill in all fields.")
+    context = {'user': user}
