@@ -4,7 +4,9 @@
 {% block content %}
 <style>
     body {
-        background-color: #f8f9fa;
+        background-color: #0d1117;
+        color: #ffffff;
+        font-family: 'Arial', sans-serif;
     }
 
     .dashboard-container {
@@ -13,49 +15,46 @@
     }
 
     .sidebar {
-        width: 250px;
-        background-color: #212529;
+        width: 260px;
+        background-color: #161b22;
         padding: 20px;
         color: #fff;
         position: fixed;
         height: 100%;
         overflow-y: auto;
+        border-right: 2px solid #21262d;
     }
 
     .sidebar h4 {
         color: #ffc107;
         margin-bottom: 30px;
         font-weight: bold;
+        text-transform: uppercase;
     }
 
     .sidebar a {
-        display: block;
-        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 15px;
         color: #adb5bd;
         text-decoration: none;
         margin-bottom: 10px;
         border-radius: 5px;
+        font-size: 16px;
+        transition: background 0.3s ease-in-out;
     }
 
     .sidebar a:hover,
     .sidebar a.active {
-        background-color: #343a40;
-        color: #fff;
+        background-color: #972d07;
+        color: #ffffff;
     }
 
     .main-content {
-        margin-left: 260px;
+        margin-left: 280px;
         padding: 40px 30px;
         width: 100%;
-    }
-
-    .table th,
-    .table td {
-        vertical-align: middle;
-    }
-
-    .btn-action {
-        margin-right: 5px;
     }
 
     .dashboard-header {
@@ -68,28 +67,81 @@
     .dashboard-header h2 {
         font-weight: 600;
     }
+
+    .stats-container {
+        display: flex;
+        gap: 20px;
+    }
+
+    .stats-card {
+        background-color: #161b22;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+        text-align: center;
+        min-width: 200px;
+    }
+
+    .stats-card h3 {
+        margin: 0;
+        font-size: 22px;
+        color: #ffc107;
+    }
+
+    .stats-card p {
+        margin: 10px 0 0;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .table th,
+    .table td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .btn-action {
+        margin-right: 5px;
+    }
 </style>
 
 <div class="dashboard-container">
     <!-- Sidebar -->
     <div class="sidebar">
-        <h4>Admin Panel</h4>
-        <a href="{% url 'admin_dashboard' %}" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-        <a href="{% url 'add_product' %}"><i class="fas fa-plus-circle"></i> Add Product</a>
-        <a href="{% url 'orders' %}"><i class="fas fa-box"></i> Orders</a>
-        <a href="{% url 'manage_users' %}"><i class="fas fa-users-cog"></i> Manage Users</a>
+        <h4>⚙️ Admin Panel</h4>
+        <a href="{% url 'admin_dashboard' %}" class="active">📊 Dashboard</a>
+        <a href="{% url 'add_product' %}">🛍️ Add Product</a>
+        <a href="{% url 'orders' %}">📦 Orders</a>
+        <a href="{% url 'manage_users' %}">👥 Manage Users</a>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
         <div class="dashboard-header">
-            <h2>Welcome, {{ user.username }} 👋</h2>
+            <h2>👋 Welcome, {{ user.username }}</h2>
             <a href="{% url 'add_product' %}" class="btn btn-success"><i class="fas fa-plus"></i> Add New Product</a>
         </div>
 
-        <div class="card shadow-sm">
+        <!-- Professional GIF -->
+        <div class="text-center mb-4">
+            <img src="https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif" alt="Admin Dashboard" class="img-fluid rounded shadow">
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-container">
+            <div class="stats-card">
+                <h3>🛒 Total Products</h3>
+                <p>{{ total_products|default:"0" }}</p>
+            </div>
+            <div class="stats-card">
+                <h3>📦 Total Orders</h3>
+                <p>{{ total_orders|default:"0" }}</p>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mt-4">
             <div class="card-header bg-dark text-white">
-                <h5 class="mb-0">Product Inventory</h5>
+                <h5 class="mb-0">🛍️ Product Inventory</h5>
             </div>
             <div class="card-body">
                 <table class="table table-bordered table-hover align-middle">
@@ -108,9 +160,9 @@
                             <td>${{ product.price }}</td>
                             <td>{{ product.stock }}</td>
                             <td>
-                                <a href="{% url 'edit_product' product.id %}" class="btn btn-sm btn-warning btn-action"><i class="fas fa-edit"></i> Edit</a>
+                                <a href="{% url 'edit_product' product.id %}" class="btn btn-sm btn-warning btn-action">✏️ Edit</a>
                                 <button class="btn btn-sm btn-danger btn-action" data-bs-toggle="modal" data-bs-target="#deleteModal{{ product.id }}">
-                                    <i class="fas fa-trash-alt"></i> Delete
+                                    ❌ Delete
                                 </button>
                             </td>
                         </tr>
@@ -135,7 +187,7 @@
                         </div>
                         {% empty %}
                         <tr>
-                            <td colspan="4" class="text-center">No products available.</td>
+                            <td colspan="4" class="text-center">⚠️ No products available.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
