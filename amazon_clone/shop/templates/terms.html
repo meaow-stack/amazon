@@ -1,17 +1,105 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h1 class="mb-4">Terms of Service</h1>
-    <h3>1. Acceptance of Terms</h3>
-    <p>By using Amazon Clone, you agree to these Terms of Service. This is a demo project and not a real commercial site.</p>
+<style>
+    body {
+        background: url('https://media.giphy.com/media/jt7bAtEijhurm/giphy.gif') center/cover no-repeat fixed;
+    }
+
+    .terms-container {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: auto;
+        transition: 0.3s ease-in-out;
+        text-align: center;
+        backdrop-filter: blur(5px);
+    }
     
-    <h3>2. Use of Service</h3>
-    <p>You may browse and purchase products as a registered user. All transactions use test payment methods via Stripe.</p>
+    .terms-container:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    h1, h3 {
+        color: #343a40;
+        font-weight: bold;
+    }
+
+    p {
+        font-size: 16px;
+        color: #6c757d;
+        line-height: 1.6;
+        text-align: left;
+    }
+
+    .emoji {
+        font-size: 22px;
+    }
+
+    .updated-text {
+        text-align: center;
+        font-style: italic;
+        color: #6c757d;
+        margin-top: 20px;
+    }
+
+    .agree-btn {
+        display: block;
+        width: 100%;
+        max-width: 200px;
+        margin: 20px auto 0;
+        padding: 12px;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        background: #28a745;
+        color: white;
+        cursor: pointer;
+        transition: 0.3s ease-in-out;
+    }
+
+    .agree-btn:hover {
+        background: #218838;
+        transform: scale(1.05);
+    }
+
+    .joke-text {
+        font-size: 18px;
+        font-style: italic;
+        color: #007bff;
+        margin-top: 25px;
+    }
+</style>
+
+<div class="terms-container">
+    <h1 class="mb-4"><i class="fas fa-gavel emoji"></i> Terms of Service</h1>
+
+    <h3><i class="fas fa-handshake emoji"></i> 1. Acceptance of Terms</h3>
+    <p>By using <strong>Amazon Clone</strong>, you acknowledge that this is a demo project, not a real online store. No, Jeff Bezos didn’t approve this. 🚀</p>
     
-    <h3>3. Privacy</h3>
-    <p>Your data (e.g., username, email, shipping details) is stored temporarily for this project and not used commercially.</p>
+    <h3><i class="fas fa-shopping-cart emoji"></i> 2. Use of Service</h3>
+    <p>Feel free to browse and "purchase" items (with imaginary money). We use Stripe test payments, so don’t expect a drone delivery. 📦</p>
     
-    <h3>4. Limitation of Liability</h3>
-    <p>This is a student project. We’re not liable for any issues arising from its use.</p>
+    <h3><i class="fas fa-user-secret emoji"></i> 3. Privacy</h3>
+    <p>We store your data temporarily for testing purposes only. Your secrets are safe… mostly because we delete everything. 🔐</p>
     
-    <p><em>Last updated: March 8, 2025</em></p>
+    <h3><i class="fas fa-exclamation-triangle emoji"></i> 4. Limitation of Liability</h3>
+    <p>If something goes wrong, don’t sue us. This is a student project, not Amazon Prime. 😅</p>
+
+    <p class="updated-text"><i class="fas fa-calendar-alt"></i> Last updated: March 28, 2025</p>
+
+    <button class="agree-btn" onclick="agreeTerms()">✅ I Agree</button>
+
+    <p class="joke-text"><i class="fas fa-laugh"></i> Fun Fact: If you read all these terms, you’re one of the 1% who actually does. 🏆</p>
+</div>
+
+<script>
+    function agreeTerms() {
+        alert("Thank you for accepting the terms! Redirecting...");
+        window.location.href = "{% url 'home' %}";  // Change 'home' to your actual home page URL
+    }
+</script>
+
 {% endblock %}
