@@ -27,7 +27,7 @@ Welcome to **Amazon Clone**, a **fully featured, professional e-commerce platfor
 - 🗂️ **Product Categories** *(In Progress)*
   - Organize products into intuitive categories for easier navigation.
 
-- 🔍 **Search Functionality** *(In Progress)*
+- 🔍 **Search Functionality** 
   - Find your favorite products instantly with smart search.
 
 - 🌟 **Ratings & Reviews** *(Planned)*
