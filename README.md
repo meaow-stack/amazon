@@ -43,7 +43,7 @@ Welcome to **Amazon Clone**, a **fully featured, professional e-commerce platfor
   - Personalized product suggestions with fallback randomizer logic.
 
  -   **ChatBot Using AI** *(Plan in progress)
- -   Using Ai to built a chatbot in the website where user can questions and get answers about there queries.
+    - Using Ai to built a chatbot in the website where user can questions and get answers about there queries.
    
 - 🌙 **Dark Mode Design**
   - Fully responsive layout with a modern **dark theme** for enhanced UX.
