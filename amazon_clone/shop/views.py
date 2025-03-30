@@ -25,6 +25,7 @@ from .models import Address  # Assuming you have an Address model
 from .forms import AddressForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout, get_user_model
+import requests
 
 
 
