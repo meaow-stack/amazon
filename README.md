@@ -5,6 +5,9 @@ Welcome to **Amazon Clone**, a **fully featured, professional e-commerce platfor
 
 🚀 AI-Powered E-Commerce Platform
 A modern, AI-enhanced e-commerce solution built with Django, engineered for scalability, speed, and an outstanding user experience. Designed with future growth in mind, including plans for Kubernetes-based scaling to ensure high availability.
+
+
+
 🏆 Core Features
 ✅ Secure User Authentication
 Effortless login, registration, and logout powered by Django’s robust authentication system.  
