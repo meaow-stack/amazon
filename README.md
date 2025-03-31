@@ -9,6 +9,9 @@ A modern, AI-enhanced e-commerce solution built with Django, engineered for scal
 
 
 🏆 Core Features
+
+
+
 ✅ Secure User Authentication
 Effortless login, registration, and logout powered by Django’s robust authentication system.  
 ✅ Product Listings
@@ -22,6 +25,9 @@ A centralized hub to manage orders, carts, and saved addresses.
 ✅ Admin Dashboard
 Full control over product management—add, edit, or remove items effortlessly.
 🔥 Advanced & Upcoming Features
+
+
+
 🚧 Product Categories (In Progress)
 Intuitive categorization to simplify product navigation.  
 🔍 Smart Search
