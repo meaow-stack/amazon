@@ -31,7 +31,7 @@ A modern, AI-enhanced e-commerce platform built with Django, designed for scalab
 
 🤖 AI-Powered Chatbot (In Progress) – Smart chatbot to assist users and enhance support.
 
-🎯 Personalized Recommendations (Planned ML Integration) – AI-powered product suggestions for a tailored shopping experience.
+🎯 Personalized Recommendations (Planned ML Integration though already implemented collabarative filtering) – AI-powered product suggestions for a tailored shopping experience.
 
 🌙 Dark Mode UI – Fully responsive, modern dark theme for improved usability.
 
